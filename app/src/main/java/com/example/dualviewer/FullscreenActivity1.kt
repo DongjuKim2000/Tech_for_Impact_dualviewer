@@ -29,8 +29,7 @@ import java.text.SimpleDateFormat
 class FullscreenActivity1 : AppCompatActivity() {
 
     lateinit var binding: ActivityFullscreen1Binding
-    val showinfobr = ShowinfoBR()  //ShowinfoBR() 클래스
-    var activityName = "액티비티1"
+    val showinfobr = ShowinfoBR()  //ShowinfoBR() 클래스. 이 프로그램의 유일한 리시버
 
     private lateinit var fullscreenContent1: TextView
     private lateinit var fullscreenContent2: TextView
@@ -68,31 +67,13 @@ class FullscreenActivity1 : AppCompatActivity() {
     inner class ShowinfoBR : BroadcastReceiver()
     {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if(intent?.action == "showinfo")
-                showinfo()
+            showinfo()
         }
-    }
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
-        when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS)
-            }
-            MotionEvent.ACTION_UP -> view.performClick()
-            else -> {
-            }
-        }
-        false
     }
 
-    @SuppressLint("ClickableViewAccessibility")
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
+        // 메뉴 만들고 수행
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.option_menu, menu)
 
@@ -158,11 +139,6 @@ class FullscreenActivity1 : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        /*val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)*/
-        //log.d(activityName,"onBackPressed")
         finish()
     }
 
@@ -172,15 +148,10 @@ class FullscreenActivity1 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView((R.layout.activity_fullscreen))
+        binding = ActivityFullscreen1Binding.inflate(layoutInflater) //??
 
-        prefs = getSharedPreferences("root_preferences", MODE_PRIVATE)
-        bgprefs = getSharedPreferences("prefs_bghistory", MODE_PRIVATE)
-
-        //log.d(activityName,"onCreate")
-
-        binding = ActivityFullscreen1Binding.inflate(layoutInflater)
-        setContentView(binding.root)
+        Log.d("Activity1","onCreate")
+        setContentView(binding.root) //레이아웃. root xml 파일...?
 
         if (Build.VERSION.SDK_INT >= 26) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -188,19 +159,21 @@ class FullscreenActivity1 : AppCompatActivity() {
         }
         isFullscreen = true
         // Set up the user interaction to manually show or hide the system UI.
-        //fullscreenContent = binding.screen1
-        fullscreenContent1 = binding.screenBg
-        fullscreenContent2 = binding.screenDirection
-        fullscreenContent3 = binding.screenLinechart
-        fullscreenContent4 = binding.screenInfo
+
+        fullscreenContent1 = binding.screenBg  //Text
+        fullscreenContent2 = binding.screenDirection //Text
+        fullscreenContent3 = binding.screenLinechart  //Line
+        fullscreenContent4 = binding.screenInfo  //Text
+
         fullscreenContent1.setOnClickListener { toggle() }
         fullscreenContent2.setOnClickListener { toggle() }
         fullscreenContent3.setOnClickListener { toggle() }
         fullscreenContent4.setOnClickListener { toggle() }
 
-        val filter = IntentFilter()
+        val filter = IntentFilter()  // 인텐트 지정
         filter.addAction("showinfo") //수신할 action 종류 넣기
         registerReceiver(showinfobr, filter) //브로드캐스트리시버 등록
+        Log.d("Activity1","브로드캐스트리시버 등록 완료")
 
         if (ChartValue.count() == 0)
         {
@@ -216,33 +189,33 @@ class FullscreenActivity1 : AppCompatActivity() {
         binding.screenInfo.text = ""
 
         setLineChartInitialization()
+        Log.d("Activity1","onCreate 끝")
 
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        //log.d(activityName,"onPostCreate")
+        Log.d("Activity1","onPostCreate")
         delayedHide(100)
     }
 
     override fun onResume() {
-        //log.d(activityName,"onResume")
+        Log.d("Activity1","onResume")
         super.onResume()
-        //Rest(this).getAllBG()
+
         Rest(this).getBG()
     }
 
     override fun onDestroy() {
+        Log.d("Activity1","onDetroy  시작")
         super.onDestroy()
         try{unregisterReceiver(showinfobr)} catch (e: Exception){}
         //log.d(activityName,"onDestroy")
     }
 
+
     private fun toggle() {
+        Log.d("toggle", "toggle 작동")
         if (isFullscreen) {
             hide()
         } else {
@@ -254,7 +227,6 @@ class FullscreenActivity1 : AppCompatActivity() {
 
         // Hide UI first
         supportActionBar?.hide()
-        //fullscreenContentControls.visibility = View.GONE
         isFullscreen = false
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -266,7 +238,7 @@ class FullscreenActivity1 : AppCompatActivity() {
     private fun show() {
 
         // Show the system bar
-        if (Build.VERSION.SDK_INT >= 30) {
+        if (Build.VERSION.SDK_INT >= 30) { // windowInsetsController: 상태바. 네비게이션바 show
             fullscreenContent1.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent2.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent3.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
@@ -305,7 +277,7 @@ class FullscreenActivity1 : AppCompatActivity() {
         val pref_fontcolorhighlow = prefs.getString ("fontcolorhighlow", "#FCFFFFFF").toString()
         val pref_fontcolorurgenthighlow = prefs.getString ("fontcolorurgenthighlow", "#FCFFFFFF").toString()
 
-        //log.d(activityName, "showinfo 시작")
+        Log.d("showinfo", "showinfo 시작")
 
         //텍스트뷰
         val currentbg = BgClass()
@@ -346,7 +318,7 @@ class FullscreenActivity1 : AppCompatActivity() {
             displayBASAL = "   \uD83C\uDD51${currentbg.basal}/h"
             info += displayBASAL
         }
-
+        // xml 구성 관련 부분
         binding.screenBg.text = currentbg.bg
         val direction = "${currentbg.arrow} ${currentbg.delta}"
         binding.screenDirection.text = direction
