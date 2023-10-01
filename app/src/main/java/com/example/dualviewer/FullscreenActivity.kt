@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 
+
 var ChartValueDateTime = ArrayList<Long>()
 var ChartValue = ArrayList<Int>()
 var lastrequestdatatime : Long = 0
@@ -19,66 +20,39 @@ lateinit var bgprefs: SharedPreferences
 
 class FullscreenActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) { // 초기화. 화면 초기 상태
         super.onCreate(savedInstanceState)
-        //log.d("FullscreenActivity","ornCreate 시작")
+        Log.d("FullscreenActivity","onCreate 시작")
         prefs = getSharedPreferences("root_preferences", Context.MODE_PRIVATE)
         bgprefs = getSharedPreferences("prefs_bghistory", MODE_PRIVATE)
 
         //타이머
-        WorkManager.getInstance(this).cancelAllWork()
+        WorkManager.getInstance(this).cancelAllWork() // this: 현재클래스
         WorkManager.getInstance(this).enqueue(OneTimeWorkRequest.Builder(TimeWorker::class.java).build())
-
+        Log.d("FullscreenActivity","timerset 완료")
         //노티
-        val pref_enablenoti = prefs.getBoolean ("enablenoti", false)  //원래는 false
+        val pref_enablenoti = prefs.getBoolean ("enablenoti", true)  //원래는 false
         if (pref_enablenoti) {
+            Log.d("FullscreenActivity","pref true")
             NotificationService.startService(applicationContext,"NightViewer Notification")
-        }
+
+        } // applicationContext는 앱 실행 중 모든 컴포넌트 데이터 공유 가능
         else {
             NotificationService.stopService(applicationContext)
         }
-
+        Log.d("FullscreenActivity","화면선택이전 ")
         //화면선택
         val pref_layout = prefs.getString ("pref_layout", "1").toString()
         when (pref_layout)
         {
             "1" -> {val i = Intent(this, FullscreenActivity1::class.java)
                 startActivity(i)
-                //log.d("FullscreenActivity","스타트 activity1")
+                Log.d("FullscreenActivity","스타트 activity1")
             }
-            "2" -> {val i = Intent(this, FullscreenActivity2::class.java)
-                startActivity(i)
-                //log.d("FullscreenActivity","스타트 activity2")
-            }
-            "3" -> {val i = Intent(this, FullscreenActivity3::class.java)
-                startActivity(i)
-                //log.d("FullscreenActivity","스타트 activity3")
-            }
-            "4" -> {val i = Intent(this, FullscreenActivity4::class.java)
-                startActivity(i)
-                //log.d("FullscreenActivity","스타트 activity4")
-            }
+
         }
 
-        //배터리최적화비활성
-        val intent = Intent(this, NotificationService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.startForegroundService(intent)
-        } else {
-            this.startService(intent)
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val pm = getSystemService(POWER_SERVICE) as PowerManager
-            val packageName = packageName
-            // 메모리 최적화가 되어 있다면, 풀기 위해 설정 화면 띄움.
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                val intent = Intent()
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivityForResult(intent, 0)
-            }
-        }
         //메인액티비티종료
         finish()
     }
