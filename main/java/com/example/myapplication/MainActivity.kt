@@ -22,12 +22,22 @@ class MainActivity : ComponentActivity() {
         setContentView(R.layout.activity_main)
 
         val bgData = BGData(this)
-        bgData.getAllBG()
+        bgData.initializeBG_db()
+        bgData.get_EntireBGInfo()
 
         //BGData에서 가져온 데이터를 사용하여 TextView에 표시하고자 함
         val displayTextView: TextView = findViewById(R.id.display_textview)
 
         //BGInfo에서 가져온 BG 데이터를 화면에 표시
+        val bgInfo = bgData.BGInfo()
+        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
+    }
+    override fun onResume() {
+        super.onResume()
+        val displayTextView: TextView = findViewById(R.id.display_textview)
+
+        //BGInfo에서 가져온 BG 데이터를 화면에 표시
+        val bgData = BGData(this)
         val bgInfo = bgData.BGInfo()
         displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
     }

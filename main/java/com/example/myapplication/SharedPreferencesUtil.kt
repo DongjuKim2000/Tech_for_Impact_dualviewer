@@ -7,19 +7,24 @@ import com.google.gson.reflect.TypeToken
 import android.util.Log
 
 object SharedPreferencesUtil {
-    private const val PREF_NAME = "BG_db"
+    private const val PREF_NAME = "BG_db" //Preference Name
     private const val KEY_USERS = "BGdata"
+    private const val MAX_BG_ENTRIES = 25 // 최대 BGData MAX_BG_ENTRIES 만큼 저장 => 메모리 무한으로 잡아먹지 못하게
     private val gson = Gson()
+
     fun saveBGDatas(context: Context, BGdatas: List<BG>) { //여러개의 BGData를 저장
-        val json = gson.toJson(BGdatas)
+        val lastNEntries = BGdatas.takeLast(MAX_BG_ENTRIES)
+        val json = gson.toJson(lastNEntries)
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPreferences.edit().putString(KEY_USERS, json).apply()
+        Logr.d("saveBGDatas", BGdatas.toString())
     }
 
     fun addBGData(context: Context, BGData: BG) { //하나의 BGData를 저장
         val existingUsers = getBGDatas(context).toMutableList()
         existingUsers.add(BGData)
-        saveBGDatas(context, existingUsers)
+        val lastNEntries = existingUsers.takeLast(MAX_BG_ENTRIES)
+        saveBGDatas(context, lastNEntries)
     }
 
     fun getBGDatas(context: Context): List<BG> {
@@ -30,12 +35,21 @@ object SharedPreferencesUtil {
     }
     fun getLatestBGData(context: Context): BG? {
         val datas = getBGDatas(context)
-        Log.d("prefUtil", datas.toString())
+        Logr.d("lastBGData", datas.toString())
         return try {
             datas.last()
-        } catch (e: NoSuchElementException) {
-            // 리스트가 비어있을 경우
+        } catch (e: NoSuchElementException) { // 리스트가 비어있을 경우
             null
+        }
+    }
+}
+object Logr {
+    fun d(tag: String, msg: String) {
+        if(msg.length > 100) {
+            Log.d(tag, msg.substring(0, 100))
+            Logr.d(tag, msg.substring(100))
+        } else {
+            Log.d(tag, msg)
         }
     }
 }
