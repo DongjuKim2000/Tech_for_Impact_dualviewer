@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/fullscreenBackgroundColor"
+    android:theme="@style/ThemeOverlay.NightViewer.FullscreenContainer"
+    tools:context=".FullscreenActivity">
+
+    <LinearLayout
+        android:id="@+id/fullscreenall"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_weight="0.80"
+            android:layout_height="0sp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/black">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0sp"
+                    android:layout_weight="0.50"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:id="@+id/screen_bg"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:keepScreenOn="true"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:background="@android:color/black"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:textSize="200sp"
+                        android:text="150" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0sp"
+                    android:layout_weight="0.50"
+                    android:layout_height="fill_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/black">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_weight="0.4"
+                            android:layout_height="0sp">
+
+                            <TextView
+                                android:id="@+id/screen_direction"
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:keepScreenOn="true"
+                                android:textColor="@android:color/white"
+                                android:textStyle="bold"
+                                android:background="@android:color/black"
+                                android:gravity="center"
+                                android:includeFontPadding="false"
+                                android:textSize="100sp"
+                                android:text="→ -5" />
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_weight="0.6"
+                            android:layout_height="0sp">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:layout_width="fill_parent"
+                                android:layout_height="fill_parent"
+                                android:id="@+id/screen_linechart"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_weight="0.2"
+            android:layout_height="0sp">
+
+            <TextView
+                android:id="@+id/screen_info"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:keepScreenOn="true"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:background="@android:color/black"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textSize="30sp"
+                android:text="22:00   15min   🅘 -0.38U   🅒 10.2g   🅑 2.2U/h" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
