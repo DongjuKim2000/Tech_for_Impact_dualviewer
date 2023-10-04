@@ -33,7 +33,7 @@ class FullscreenActivity1 : AppCompatActivity() {
 
     private lateinit var fullscreenContent1: TextView
     private lateinit var fullscreenContent2: TextView
-    private lateinit var fullscreenContent3: LineChart
+    //private lateinit var fullscreenContent3: LineChart
     private lateinit var fullscreenContent4: TextView
 
     private val hideHandler = Handler(Looper.myLooper()!!)
@@ -44,7 +44,7 @@ class FullscreenActivity1 : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 30) {
             fullscreenContent1.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent2.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent3.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            //fullscreenContent3.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent4.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
         } else {
             // Note that some of these constants are new as of API 16 (Jelly Bean)
@@ -52,7 +52,7 @@ class FullscreenActivity1 : AppCompatActivity() {
             // at compile-time and do nothing on earlier devices.
             fullscreenContent1.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             fullscreenContent2.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            fullscreenContent3.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            //fullscreenContent3.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             fullscreenContent4.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         }
     }
@@ -151,7 +151,8 @@ class FullscreenActivity1 : AppCompatActivity() {
         binding = ActivityFullscreen1Binding.inflate(layoutInflater) //??
 
         Log.d("Activity1","onCreate")
-        setContentView(binding.root) //레이아웃. root xml 파일...?
+        setContentView(R.layout.activity_fullscreen1) //레이아웃. root xml 파일...?
+        //setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 26) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -162,12 +163,12 @@ class FullscreenActivity1 : AppCompatActivity() {
 
         fullscreenContent1 = binding.screenBg  //Text
         fullscreenContent2 = binding.screenDirection //Text
-        fullscreenContent3 = binding.screenLinechart  //Line
+        //fullscreenContent3 = binding.screenLinechart  //Line
         fullscreenContent4 = binding.screenInfo  //Text
 
         fullscreenContent1.setOnClickListener { toggle() }
         fullscreenContent2.setOnClickListener { toggle() }
-        fullscreenContent3.setOnClickListener { toggle() }
+        //fullscreenContent3.setOnClickListener { toggle() }
         fullscreenContent4.setOnClickListener { toggle() }
 
         val filter = IntentFilter()  // 인텐트 지정
@@ -202,8 +203,31 @@ class FullscreenActivity1 : AppCompatActivity() {
     override fun onResume() {
         Log.d("Activity1","onResume")
         super.onResume()
+        if(Build.VERSION.SDK_INT >= 24) {
+            if (isInMultiWindowMode) {
+                Log.d("Activity1", "multi window mode")
+                //val i = Intent(this, FullscreenActivity1::class.java)
+                //startActivity(i)
+                Log.d("FullscreenActivity","스타트 activity1")
+
+            } else {
+                val i = Intent(this, FullscreenActivity2::class.java)
+                startActivity(i)
+                Log.d("Activity2", "not multi window")
+            }
+        }
 
         Rest(this).getBG()
+    }
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean){
+        super.onMultiWindowModeChanged(isInMultiWindowMode)
+        Log.d("Activity1", "onMultiWindowModeChanged")
+
+        if (isInMultiWindowMode) Log.d("Activity1", "multinow!")
+    }
+
+    override fun onPause(){
+        super.onPause()
     }
 
     override fun onDestroy() {
@@ -241,12 +265,12 @@ class FullscreenActivity1 : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= 30) { // windowInsetsController: 상태바. 네비게이션바 show
             fullscreenContent1.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent2.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent3.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+            //fullscreenContent3.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
             fullscreenContent4.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
         } else {
             fullscreenContent1.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             fullscreenContent2.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            fullscreenContent3.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            //fullscreenContent3.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             fullscreenContent4.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         }
         isFullscreen = true
@@ -387,7 +411,7 @@ class FullscreenActivity1 : AppCompatActivity() {
                 }
             }
         }
-
+        /*
         val lineChart: LineChart = binding.screenLinechart
 
         var i : Int = 0
@@ -416,7 +440,7 @@ class FullscreenActivity1 : AppCompatActivity() {
         lineChart.axisLeft.axisMaximum = (maxbg + 1).toFloat()
         lineChart.notifyDataSetChanged()
         lineChart.invalidate()
-
+        */
         if (isFullscreen) { hide() }
 
     }
@@ -437,7 +461,7 @@ class FullscreenActivity1 : AppCompatActivity() {
         val pref_chartlinewidth = prefs.getString ("chartlinewidth", "1")?.toFloat() ?: 1f
 
         //log.d(activityName, "초기화 시작")
-
+        /*
         val lineChart: LineChart = binding.screenLinechart
         lineChart.clear()
 
@@ -541,7 +565,7 @@ class FullscreenActivity1 : AppCompatActivity() {
         lineChart.axisLeft.axisMaximum = pref_highvalue + 1
         lineChart.axisLeft.axisMinimum = 40f
         lineChart.setScaleEnabled(false)
-
+    */
     }
 
     companion object {
