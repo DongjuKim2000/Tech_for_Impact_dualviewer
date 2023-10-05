@@ -18,6 +18,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -25,7 +26,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.nightscout.nightviewer.databinding.ActivityFullscreen2Binding
 import java.text.SimpleDateFormat
-
+// 액티비티1과 유사. 풀스크린 모드
 class FullscreenActivity2 : AppCompatActivity() {
 
     lateinit var binding: ActivityFullscreen2Binding
@@ -37,6 +38,7 @@ class FullscreenActivity2 : AppCompatActivity() {
     private lateinit var fullscreenContent4: TextView
 
     private val hideHandler = Handler(Looper.myLooper()!!)
+
 
     @SuppressLint("InlinedApi")
     private val hidePart2Runnable = Runnable {
@@ -146,7 +148,7 @@ class FullscreenActivity2 : AppCompatActivity() {
                 //(d.findViewById(android.R.id.message) as TextView).gravity = Gravity.CENTER
 
                 return true
-                //Toast.makeText(this, "테스트", Toast.LENGTH_SHORT).show()
+
             }
             R.id.menu_exit -> {
                 finish()
@@ -176,7 +178,7 @@ class FullscreenActivity2 : AppCompatActivity() {
         prefs = getSharedPreferences("root_preferences", MODE_PRIVATE)
         bgprefs = getSharedPreferences("prefs_bghistory", MODE_PRIVATE)
 
-        //log.d(activityName,"onCreate")
+        Log.d("Activity2","onCreate")
 
         binding = ActivityFullscreen2Binding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -315,9 +317,6 @@ class FullscreenActivity2 : AppCompatActivity() {
         val pref_fontcolorhighlow = prefs.getString ("fontcolorhighlow", "#FCFFFFFF").toString()
         val pref_fontcolorurgenthighlow = prefs.getString ("fontcolorurgenthighlow", "#FCFFFFFF").toString()
 
-        //log.d(activityName, "showinfo 시작")
-
-        //텍스트뷰
         val currentbg = BgClass()
         currentbg.LoadCurrentBG()
 
@@ -357,7 +356,12 @@ class FullscreenActivity2 : AppCompatActivity() {
             info += displayBASAL
         }
 
-        binding.screenBg.text = currentbg.bg
+        var  bg_value : String = currentbg.bg
+        var float_bg = bg_value.toFloat()
+        var int_bg = float_bg.toInt()
+        binding.screenBg.text = int_bg.toString()
+
+
         val direction = "${currentbg.arrow} ${currentbg.delta}"
         binding.screenDirection.text = direction
         binding.screenInfo.text = info
