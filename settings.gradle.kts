@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "dualviewer"
 include(":app")
+include(":mynightviewer")
