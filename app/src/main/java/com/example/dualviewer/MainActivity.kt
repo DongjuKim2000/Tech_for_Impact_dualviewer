@@ -1,58 +1,43 @@
 package com.example.dualviewer
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import com.example.dualviewer.databinding.ActivityMainBinding
+import android.widget.TextView
+import androidx.activity.ComponentActivity
+import com.github.mikephil.charting.charts.LineChart
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-
+lateinit var prefs: SharedPreferences
+lateinit var BG_db: SharedPreferences
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        val bgData = BGData(this)
+//        bgData.initializeBG_db()
+//        bgData.get_EntireBGInfo()
+//
+//        //BGData에서 가져온 데이터를 사용하여 TextView에 표시하고자 함
+//        val displayTextView: TextView = findViewById(R.id.display_textview)
+//
+//        //BGInfo에서 가져온 BG 데이터를 화면에 표시
+//        val bgInfo = bgData.BGInfo()
+//        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
 
-        setSupportActionBar(binding.toolbar)
+        //위 코드 internet permission 없다고 오류 나서 잠시 주석처리함
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        //그래프 표시
+        val lineChart: LineChart = findViewById(R.id.lineChart)
+        val thread = GraphThread(lineChart)
+        thread.start()
     }
+    override fun onResume() {
+        super.onResume()
+        val displayTextView: TextView = findViewById(R.id.display_textview)
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        //BGInfo에서 가져온 BG 데이터를 화면에 표시
+        val bgData = BGData(this)
+        val bgInfo = bgData.BGInfo()
+        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
     }
 }
