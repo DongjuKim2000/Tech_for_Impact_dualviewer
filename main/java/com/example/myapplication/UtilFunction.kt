@@ -15,3 +15,7 @@ fun convertUtcToKst(utcTimestamp: String): String {
 
     return sdfKst.format(kstCalendar.time)
 }
+
+fun listToString(list: List<String>, delimiter: String = ", "): String {
+    return list.joinToString(delimiter)
+}

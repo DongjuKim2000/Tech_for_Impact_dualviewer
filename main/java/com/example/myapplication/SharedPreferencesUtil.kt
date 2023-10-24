@@ -42,6 +42,20 @@ object SharedPreferencesUtil {
             null
         }
     }
+    fun getRecent10BGValues(context: Context): List<String> {
+        val bgList = getBGDatas(context) // getBGDatas 함수로 모든 BG 데이터를 가져옵니다.
+
+        // 최근 10개의 BG 데이터를 추출합니다. 만약 BG 데이터가 10개 미만이면 전체 데이터를 반환합니다.
+        val recent10BGs = if (bgList.size <= 10) {
+            bgList
+        } else {
+            bgList.subList(bgList.size - 10, bgList.size)
+        }
+
+        // 최근 10개 BG 데이터에서 a 필드를 추출한 문자열 리스트를 반환합니다.
+        return recent10BGs.map { it.bg }
+    }
+
 }
 object Logr {
     fun d(tag: String, msg: String) {

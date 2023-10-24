@@ -12,7 +12,6 @@ import com.google.gson.reflect.TypeToken
 
 class BGData(private val context: Context){
     private val pref_urlText = "https://pkd7320591.my.nightscoutpro.com"
-    private val initNumofData = 20 // 초기값 20개
     //User_Prefs : 기본 Preferences (iob, cob, basal enable 등)
     //BG_db: 혈당 데이터베이스 (Preferences로 구현 sql로도 가능할듯)
     fun initializeBG_db(){ //최근 10개 데이터로 db initialize //delta,arrow정보는 제외
@@ -27,8 +26,8 @@ class BGData(private val context: Context){
         Log.d("BGData.kt",  "getEntireData(1개) 시작")
         Thread{
             val currentbg = get_BGInfoFromURL(pref_urlText)
-            currentbg.LogCurrentData()
-            currentbg.saveCurrentBG()
+            currentbg.LogBG()
+            currentbg.saveBG()
         }.start()
     }
 
@@ -68,6 +67,14 @@ class BGData(private val context: Context){
         return BGInfo(bg, time, arrow, delta, iob, cob, basal)
     }
 
+    fun get_CurrentBGInfo(): BG?{ //return 값 null가능
+        val bgInfo = BGInfo()
+        return bgInfo.bginfo
+    }
+
+    fun get_Recent10BGValues(): List<String>{
+        return SharedPreferencesUtil.getRecent10BGValues(context)
+    }
     inner class BGInfo {
         var bginfo: BG?
         constructor(){ //현재 저장된 BGINFO 불러오기
@@ -79,10 +86,10 @@ class BGData(private val context: Context){
         constructor(bg: String, time: String, arrow: String, delta: String, iob: String, cob: String, basal: String){
             this.bginfo = BG(bg,time,arrow,delta,iob,cob,basal)
         }
-        fun saveCurrentBG(){ //현재 BG 저장하기
+        fun saveBG(){ //현재 BG 저장하기
             bginfo?.let { SharedPreferencesUtil.addBGData(context, it) }
         }
-        fun LogCurrentData(){ //받아온 데이터 Log
+        fun LogBG(){ //받아온 데이터 Log
             Log.d("BGData.kt", this.bginfo.toString())
         }
     }

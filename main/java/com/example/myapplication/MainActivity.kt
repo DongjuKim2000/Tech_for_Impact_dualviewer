@@ -29,8 +29,9 @@ class MainActivity : ComponentActivity() {
         val displayTextView: TextView = findViewById(R.id.display_textview)
 
         //BGInfo에서 가져온 BG 데이터를 화면에 표시
-        val bgInfo = bgData.BGInfo()
-        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
+        val current_bgInfo = listToString(bgData.get_Recent10BGValues(), ",")
+        Log.d("main", current_bgInfo)
+        displayTextView.text = current_bgInfo
     }
     override fun onResume() {
         super.onResume()
@@ -39,6 +40,8 @@ class MainActivity : ComponentActivity() {
         //BGInfo에서 가져온 BG 데이터를 화면에 표시
         val bgData = BGData(this)
         val bgInfo = bgData.BGInfo()
-        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
+        val current_bgInfo = listToString(bgData.get_Recent10BGValues(), ",")
+        Log.d("main", current_bgInfo)
+        displayTextView.text = current_bgInfo
     }
 }
