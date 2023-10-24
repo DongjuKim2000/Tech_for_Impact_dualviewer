@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:background="?attr/fullscreenBackgroundColor"
     android:theme="@style/ThemeOverlay.NightViewer.FullscreenContainer"
-    tools:context=".FullscreenActivity"
+    tools:context=".FullscreenActivity1"
     android:resizeableActivity="true"
-    android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize">
+    >
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,7 +22,7 @@
             android:layout_height="0sp">
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/black">
@@ -35,17 +35,17 @@
 
                     <TextView
                         android:id="@+id/screen_bg"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
+                        android:keepScreenOn="true"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
                         android:background="@android:color/black"
                         android:gravity="center"
                         android:includeFontPadding="false"
-                        android:keepScreenOn="true"
+                        android:textSize="80sp"
                         android:maxLines="1"
-                        android:text="150"
-                        android:textColor="@android:color/white"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
+                        android:text="150" />
 
                 </LinearLayout>
 
@@ -53,7 +53,7 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_weight="0.60"
+                    android:layout_weight="0.30"
                     android:layout_height="fill_parent">
 
                     <LinearLayout
@@ -64,7 +64,7 @@
 
                         <LinearLayout
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
+                            android:layout_height="121dp"
                             android:layout_weight="0.7"
                             android:orientation="horizontal">
 
@@ -77,9 +77,9 @@
                                 android:includeFontPadding="false"
                                 android:keepScreenOn="true"
                                 android:text="→ -5"
+                                android:maxLines="1"
                                 android:textColor="@android:color/white"
                                 android:textSize="50sp"
-                                android:maxLines="2"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -113,7 +113,7 @@
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:textSize="30sp"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="22:00   15min   🅘 -0.38U   🅒 10.2g   🅑 2.2U/h" />
 
         </LinearLayout>
