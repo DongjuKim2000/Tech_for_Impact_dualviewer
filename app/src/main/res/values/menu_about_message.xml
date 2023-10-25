@@ -1,0 +1,9 @@
+<resources>
+    <string name="menu_about_message">
+        <![CDATA[
+        Team : 운전 중 혈당 뷰어 <br>
+        Thanks to 김동주 김재호 김혜연 박찬호 정지광 차연우<br>
+        <a href="https://cafe.naver.com/t1d">공식카페(슈거트리)</a>
+        ]]>
+    </string>
+</resources>

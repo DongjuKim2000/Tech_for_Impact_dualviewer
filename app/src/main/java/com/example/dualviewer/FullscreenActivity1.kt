@@ -17,46 +17,28 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.nightscout.nightviewer.databinding.ActivityFullscreen1Binding
 import java.text.SimpleDateFormat
+import androidx.core.text.HtmlCompat
+
 // 멀티스크린을 위한 액티비티입니다.
 class FullscreenActivity1 : AppCompatActivity() {
 
     lateinit var binding: ActivityFullscreen1Binding
     val showinfobr = ShowinfoBR()  //ShowinfoBR() 클래스. 이 프로그램의 유일한 리시버
 
-    private lateinit var fullscreenContent1: TextView
-    private lateinit var fullscreenContent2: TextView
-    private lateinit var fullscreenContent4: TextView
+    private lateinit var fullscreenContent5:LinearLayout
 
     private val hideHandler = Handler(Looper.myLooper()!!)
 
-    @SuppressLint("InlinedApi")
-    private val hidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
-        if (Build.VERSION.SDK_INT >= 30) {
-            fullscreenContent1.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent2.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent4.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        } else {
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            fullscreenContent1.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            fullscreenContent2.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            fullscreenContent4.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
-    }
-    private val showPart2Runnable = Runnable {
-        // Delayed display of UI elements
-        supportActionBar?.show()
-    }
     private var isFullscreen: Boolean = false
     private val hideRunnable = Runnable { hide() }
 
@@ -84,41 +66,30 @@ class FullscreenActivity1 : AppCompatActivity() {
                 return true
             }
             R.id.menu_about -> {
+                val dialogView = LayoutInflater.from(this).inflate(R.layout.menu_about_layout, null)
+                val messageTextView = dialogView.findViewById<TextView>(R.id.about_message)
+                messageTextView.movementMethod = LinkMovementMethod.getInstance()
 
-                val image = ImageView(this)
-                image.setImageResource(R.drawable.kst1d)
-                // 다이얼로그로 아래 메시지 출력
-                var msg = "Made by 김해서연아빠<br>"
-                msg += "Icon directed by 광명셀리나맘 Icon made by 광명셩키<br>"
-                msg += "Thanks to 박상미 강서연 강지유 시조새팬클럽<br>"
-                msg += "and 한국1형당뇨병환우회<br><br>"
-                msg += "환우회 링크   :&nbsp;"
-                msg += "<a href=\"http://kst1d.org\">홈페이지</a>&nbsp;&nbsp;&nbsp;"
-                msg += "<a href=\"https://cafe.naver.com/t1d\">공식카페(슈거트리)</a><br>"
-                msg += "<a href=\"https://blog.naver.com/kst1diabetes\">블로그</a>&nbsp;&nbsp;&nbsp;"
-                msg += "<a href=\"https://www.youtube.com/channel/UCyO4LR8XD-UzCdsjAWRGlNQ?view_as=subscriber\">유튜브</a>&nbsp;&nbsp;&nbsp;"
-                msg += "<a href=\"https://www.instagram.com/kst1diabetes\">인스타그램</a>&nbsp;&nbsp;&nbsp;"
-                msg += "<a href=\"https://www.facebook.com/%ED%95%9C%EA%B5%AD1%ED%98%95%EB%8B%B9%EB%87%A8%EB%B3%91%ED%99%98%EC%9A%B0%ED%9A%8C-509826469456836\">페이스북</a>"
-
-                var newmsg = Html.fromHtml(msg)
-
-                val d: AlertDialog = AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogTheme))
-
-                    .setPositiveButton("OK", null)   //버튼
-                    .setIcon(R.mipmap.ic_main_round)    //메시지 밑에 아이콘
-                    .setTitle("Nightviewer v1.11")
-                    .setMessage(newmsg)
-                    .setView(image)
+                val about_message: AlertDialog = AlertDialog.Builder(ContextThemeWrapper(this, R.style.AlertDialogTheme))
+                    .setPositiveButton("Thank you", null)
+                    .setIcon(R.mipmap.ic_main_round)
+                    .setTitle(R.string.menu_about_message)
+                    .setView(dialogView)
                     .create()
+                about_message.show()
 
-                d.show()
+                val positiveButton: Button = about_message.getButton(AlertDialog.BUTTON_POSITIVE)
+                positiveButton.setTextColor(Color.parseColor("#00ff00"))
 
-                val positiveButton: Button = d.getButton(AlertDialog.BUTTON_POSITIVE)
-                positiveButton.setTextColor(Color.parseColor("#515151"))
+                (about_message.findViewById(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
 
-                (d.findViewById(android.R.id.message) as TextView).movementMethod = LinkMovementMethod.getInstance()
+                val htmlMessage = HtmlCompat.fromHtml(getString(R.string.menu_about_message), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                messageTextView.text = htmlMessage
+                messageTextView.movementMethod = LinkMovementMethod.getInstance()
+
                 return true
             }
+
             R.id.menu_exit -> { // 설정 버튼 중 exit(나가기) 누름
                 finish()  // 앱 (완전히) 종료
                 return true
@@ -149,13 +120,8 @@ class FullscreenActivity1 : AppCompatActivity() {
         isFullscreen = true
         // Set up the user interaction to manually show or hide the system UI.
 
-        fullscreenContent1 = binding.screenBg  //Text
-        fullscreenContent2 = binding.screenDirection //Text
-        fullscreenContent4 = binding.screenInfo  //Text
-
-        fullscreenContent1.setOnClickListener { toggle() } //상단바 보였다 말았다
-        fullscreenContent2.setOnClickListener { toggle() }
-        fullscreenContent4.setOnClickListener { toggle() }
+        fullscreenContent5 = binding.fullscreenall
+        fullscreenContent5.setOnClickListener { toggle() }
 
         val filter = IntentFilter()  // 인텐트 지정
         filter.addAction("showinfo") //수신할 action 종류 넣기
@@ -182,7 +148,6 @@ class FullscreenActivity1 : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         Log.d("Activity1","onPostCreate")
-        delayedHide(100)
     }
 
     override fun onResume() {
@@ -223,38 +188,40 @@ class FullscreenActivity1 : AppCompatActivity() {
 
         // Hide UI first
         supportActionBar?.hide()
-        isFullscreen = false
-
+        //fullscreenContentControls.visibility = View.GONE
         // Schedule a runnable to remove the status and navigation bar after a delay
-        hideHandler.removeCallbacks(showPart2Runnable)
-        hideHandler.postDelayed(hidePart2Runnable, UI_ANIMATION_DELAY.toLong())
-
+        hideHandler.removeCallbacks(hidePart2Runnable)
+        hideHandler.post(hidePart2Runnable)
+        isFullscreen = false
     }
 
     private fun show() {
 
         // Show the system bar
-        if (Build.VERSION.SDK_INT >= 30) { // windowInsetsController: 상태바. 네비게이션바 show
-            fullscreenContent1.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent2.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            fullscreenContent4.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        } else {
-            fullscreenContent1.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            fullscreenContent2.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            fullscreenContent4.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        }
+        supportActionBar?.show()
+        // Schedule a runnable to display UI elements after a delay
+        hideHandler.removeCallbacks(showPart2Runnable)
+        hideHandler.post(showPart2Runnable)
         isFullscreen = true
 
-        // Schedule a runnable to display UI elements after a delay
-        hideHandler.removeCallbacks(hidePart2Runnable)
-        hideHandler.postDelayed(showPart2Runnable, UI_ANIMATION_DELAY.toLong())
-
     }
 
-    private fun delayedHide(delayMillis: Int) {
-        hideHandler.removeCallbacks(hideRunnable)
-        hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
+    @SuppressLint("InlinedApi")
+    private val hidePart2Runnable = Runnable {
+        if (Build.VERSION.SDK_INT >= 30) {
+            fullscreenContent5.windowInsetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+        } else {
+            // Note that some of these constants are new as of API 16 (Jelly Bean)
+            // and API 19 (KitKat). It is safe to use them, as they are inlined
+            // at compile-time and do nothing on earlier devices.
+            fullscreenContent5.systemUiVisibility = View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        }
     }
+
+    private val showPart2Runnable = Runnable {
+        supportActionBar?.show()
+    }
+
 
     private fun showinfo() {//설정
         // class.kt가 바뀔 시 수정되어야 하는 부분
