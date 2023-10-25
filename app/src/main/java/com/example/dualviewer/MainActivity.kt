@@ -24,11 +24,10 @@ class MainActivity : ComponentActivity() {
 //        val bgInfo = bgData.BGInfo()
 //        displayTextView.text = bgInfo.bginfo?.bg ?: "No BG data available"
 
-        //위 코드 internet permission 없다고 오류 나서 잠시 주석처리함
 
         //그래프 표시
         val lineChart: LineChart = findViewById(R.id.lineChart)
-        val thread = GraphThread(lineChart)
+        val thread = GraphThread(lineChart, baseContext)
         thread.start()
     }
     override fun onResume() {
