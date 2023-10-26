@@ -15,12 +15,11 @@ class TimeWorker(appContext: Context, workerParams: WorkerParameters) : Worker(a
         // 여기에서 실제 데이터 업데이트 작업을 수행
         getBG()
         Log.d("TimeWorker", "Executed")
-        // 5분 후에 다음 작업 예약
+        // 1분 후에 다음 작업 예약
         val nextWork = OneTimeWorkRequest.Builder(TimeWorker::class.java)
-            .setInitialDelay(5, TimeUnit.MINUTES)
+            .setInitialDelay(1, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(applicationContext).enqueue(nextWork)
-
         return Result.success()
     }
 

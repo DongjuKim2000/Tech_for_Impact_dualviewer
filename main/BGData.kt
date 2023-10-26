@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
+import java.util.Date
 class BGData(private val context: Context){
     private val pref_urlText = "https://pkd7320591.my.nightscoutpro.com"
     //User_Prefs : 기본 Preferences (iob, cob, basal enable 등)
@@ -27,7 +27,21 @@ class BGData(private val context: Context){
         Thread{
             val currentbg = get_BGInfoFromURL(pref_urlText)
             currentbg.LogBG()
-            currentbg.saveBG()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val currentBGInfo = get_CurrentBGInfo()
+            if (currentBGInfo != null) {
+                val currentTimeMillis = System.currentTimeMillis()
+                val bgTimeMillis = dateFormat.parse(currentBGInfo.time).time
+                val timeDifferenceInMinutes = ((currentTimeMillis - bgTimeMillis) / (1000 * 60)).toInt()
+
+                if (timeDifferenceInMinutes >= 5) {
+                    currentbg.saveBG()
+                } else {
+                    Log.d("getEntireBGInfo", "SKIPPED")
+                }
+            } else {
+                Log.d("getEntireBGInfo", "BG 데이터를 가져오지 못했습니다.")
+            }
         }.start()
     }
 
