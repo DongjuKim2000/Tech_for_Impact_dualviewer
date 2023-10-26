@@ -2,6 +2,7 @@ package com.example.myapplication
 
 import android.content.Context
 import android.util.Log
+import androidx.work.ExistingWorkPolicy
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.PeriodicWorkRequest
@@ -17,9 +18,14 @@ class TimeWorker(appContext: Context, workerParams: WorkerParameters) : Worker(a
         Log.d("TimeWorker", "Executed")
         // 1분 후에 다음 작업 예약
         val nextWork = OneTimeWorkRequest.Builder(TimeWorker::class.java)
-            .setInitialDelay(1, TimeUnit.MINUTES)
+            .setInitialDelay(30, TimeUnit.SECONDS)
             .build()
-        WorkManager.getInstance(applicationContext).enqueue(nextWork)
+        WorkManager.getInstance(applicationContext).cancelAllWorkByTag("TimeWorker")
+        WorkManager.getInstance(applicationContext).enqueueUniqueWork(
+            "TimeWorker", // 고유한 이름 지정
+            ExistingWorkPolicy.REPLACE, // 동일한 이름을 사용할 경우 대체
+            nextWork
+        )
         return Result.success()
     }
 
