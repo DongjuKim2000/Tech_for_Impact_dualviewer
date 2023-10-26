@@ -17,7 +17,7 @@ object SharedPreferencesUtil {
         val json = gson.toJson(lastNEntries)
         val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPreferences.edit().putString(KEY_USERS, json).apply()
-        Logr.d("saveBGDatas", BGdatas.toString())
+        //Logr.d("saveBGDatas", BGdatas.toString())
     }
 
     fun addBGData(context: Context, BGData: BG) { //하나의 BGData를 저장
@@ -35,7 +35,7 @@ object SharedPreferencesUtil {
     }
     fun getLatestBGData(context: Context): BG? {
         val datas = getBGDatas(context)
-        Logr.d("lastBGData", datas.toString())
+        //Logr.d("lastBGData", datas.toString())
         return try {
             datas.last()
         } catch (e: NoSuchElementException) { // 리스트가 비어있을 경우

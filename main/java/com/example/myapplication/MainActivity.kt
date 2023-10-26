@@ -13,9 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.TimeWorker
+
 lateinit var prefs: SharedPreferences
 lateinit var BG_db: SharedPreferences
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +37,9 @@ class MainActivity : ComponentActivity() {
         val current_bgInfo = listToString(bgData.get_Recent10BGValues(), ",")
         Log.d("main", current_bgInfo)
         displayTextView.text = current_bgInfo
+
+        val workRequest = OneTimeWorkRequest.Builder(TimeWorker::class.java).build()
+        WorkManager.getInstance(this).enqueue(workRequest)
     }
     override fun onResume() {
         super.onResume()
